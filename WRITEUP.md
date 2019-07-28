@@ -11,7 +11,7 @@ I started with the suggestions made in the [QA classroom video](https://www.yout
 
 No change was made in the project structure or in the cmake configuration. The only changes were made:
 * Added new functions in the file [src/helpers.h](./src/helpers.h).
-* Added file [src/spline.h](./scr/spline.h) to use the [Cubic Spline Interpolation](https://kluge.in-chemnitz.de/opensource/spline/). This library is used to calculate the trajectories of the car.
+* Added file [src/spline.h](./src/spline.h) to use the [Cubic Spline Interpolation](https://kluge.in-chemnitz.de/opensource/spline/). This library is used to calculate the trajectories of the car.
 
 ### Valid Trajectories
 
@@ -56,14 +56,55 @@ The car remains in the lane without problems except during changing lanes.
 
 In some tests it happened that during the changing lane the traffic situation changed and the car decided to return to the original lane.
 This situation caused the lane change to be longer than 3 seconds. To avoid it i decided use a global varaible `next_lane` 
-and not perform any lane change until the previous change was finished.
+and not perform any lane change until the previous change was finished.  [Line 57 to line 58](./src/main.cpp#L57).
 
 #### The car is able to change lanes
 
+The car can change lane in function of the position of the other cars. For it i have divided the road into
+different areas as can be seen in the image below. The planner tries to analyze the behavior of the other vehicles
+in each of these areas.
+ 
 ![driving example](images/img2.png)
 
+* **A**: From -5m to -20m  behind the ego car. Other cars are taken into account if their speeds are higher than the speed of the ego car.
+* **B**: From -5m behind the ego car to 30m ahead of the end of the calculated trajectory. The cars are always taken into account regardless their speeds.
+* **C**: From 0m ahead of the ego car to the end of the caculated trajectory. A car in this area generates an emergency situation.
+* **D**: From the end of the calculated trajectory to 30m ahead. A car in this area is blocking the progress of the ego car.
 
+The code to define this areas it can be seen in [Line 130 to line 177](./src/main.cpp#L130).
+
+Once the situation of the traffic on the road is detected, the car has to make a decision. For it i have implemented the FSM shown below.
+
+![FSM](images/img5.png)
+
+The description of the states are the following:
+
+* **CHANGE LEFT**: The car moves to the left lane.
+* **CHANGE RIGHT**: The car moves to the right lane.
+* **KEEP LANE**: The car stays in the lane accelerating at 4 m/s^2^ per second until it reaches the maximum speed of 49 mph.
+* **FAST BRAKE**: The car brakes at 9 m/s^2^ to avoid a collision.
+* **PREPARE CHANGE LANE**: The car stays in the lane at constant speed equal that the speed of the car ahead.
+
+The code of the FSM can be seen in [Line 180 to line 211](./src/main.cpp#L180).
 
 ### Reflection
 
-   
+In this section the code model for generating paths is described in detail.
+
+To generate the path we start from one of the two assumptions:
+* If a previous path exist, the last two points are used as the beginning of the new path. In this way it is achieved that the new trajectory is tangent to the previous trajectory. [Line 231 to line 236](./src/main.cpp#L231)
+* If a previous path doesn't exist, it is used the current position of the car as the second point. To get the firs point, an imaginary point is calculated using the yaw angle of the car and going 1 meter backwards. [Line 239 to line 250](./src/main.cpp#L239)
+
+Once the two first points have been obtained, three more equispaced points 30 meters. We these five points, a spline
+line is generated to achieve a smooth trajectory. It can be seen in the image below, and the code is located in 
+[Line 250 to line 280](./src/main.cpp#L250).
+
+![spline trajectory](images/img3.png)
+
+To use the Cubic Spline Interpolation, it is necessary that the x points are ordered. Due this, the points of the new trajectory
+will be calculated in local coordinates instead of global coordinates.
+
+Finally, to calculate the new points and fill the trajectory until reach the 50 points, taking into account the car 
+speed and car acceleration, the distance between two points is calculated as shown in the graphic below. [Line 282 to line 311](./src/main.cpp#L282)
+
+![new_points](images/img4.png)
