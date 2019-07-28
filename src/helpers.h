@@ -154,4 +154,37 @@ vector<double> getXY(double s, double d, const vector<double> &maps_s,
   return {x,y};
 }
 
+// Transform from global x,y coordinates to local x,y
+vector<double> getLocalXY(double point_x, double point_y, double car_x, double car_y, double car_yaw) {
+  double shift_x = point_x - car_x;
+  double shift_y = point_y - car_y;	
+  double new_x = shift_x*cos(0-car_yaw) - shift_y*sin(0-car_yaw);
+  double new_y = shift_x*sin(0-car_yaw) + shift_y*cos(0-car_yaw);
+
+  return {new_x,new_y};
+}
+
+// Transform from local x,y coordinates to Global x,y
+vector<double> getGlobalXY(double point_x, double point_y, double car_x, double car_y, double car_yaw) {
+  double new_x = point_x*cos(car_yaw) - point_y*sin(car_yaw);
+  double new_y = point_x*sin(car_yaw) + point_y*cos(car_yaw);
+  new_x += car_x;
+  new_y += car_y;
+
+  return {new_x,new_y};
+}
+
+int getLane(double d, double width){
+  int lane;
+
+  lane = (int)(d/width);
+  
+  if(d >= 0){
+	lane += 1;
+  }else{
+	lane -= 1; 
+  }
+ 
+  return lane;  
+}
 #endif  // HELPERS_H
