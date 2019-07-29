@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!-- saved from url=(0079)https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node2.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+   <title>The Path Planning Problem</title>
+   <meta name="description" content="The Path Planning Problem">
+   <meta name="keywords" content="arianehtml">
+   <meta name="resource-type" content="document">
+   <meta name="distribution" content="global">
+   <meta name="GENERATOR" content="Mozilla/3.01Gold (X11; I; SunOS 5.5 sun4m) [Netscape]">
+</head>
+<body lang="EN">
+
+<p><!--Converted with LaTeX2HTML 96.1 (Feb 5, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds --><link rel="STYLESHEET" href="./The Path Planning Problem_files/arianehtml.css"><a name="tex2html42"></a><a name="tex2html42"></a><a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node3.html" name="tex2html42"><img src="./The Path Planning Problem_files/next_motif.gif" alt="next" height="24" width="37" align="BOTTOM"></a>
+<a name="tex2html40"></a><a name="tex2html40"></a><a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/ariane.html" name="tex2html40"><img src="./The Path Planning Problem_files/up_motif.gif" alt="up" height="24" width="26" align="BOTTOM"></a>
+<a name="tex2html34"></a><a name="tex2html34"></a><a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node1.html" name="tex2html34"><img src="./The Path Planning Problem_files/previous_motif.gif" alt="previous" height="24" width="63" align="BOTTOM"></a>
+<br>
+<b>Next:</b> <a name="tex2html43"></a><a name="tex2html43"></a><a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node3.html" name="tex2html43">Principle
+of the Ariadne's </a><b>Up:</b> <a name="tex2html41"></a><a name="tex2html41"></a><a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/ariane.html" name="tex2html41">No
+Title</a> <b>Previous:</b> <a name="tex2html35"></a><a name="tex2html35"></a><a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node1.html" name="tex2html35">Introduction</a>
+<br>
+</p>
+
+<h1><a name="SECTION00020000000000000000"></a>The Path Planning Problem</h1>
+
+<p><a name="problem"></a>&nbsp; Many versions of the path planning problem
+exist. An exhaustive classification of these problems and of the methods
+developed to solve them can be found in a survey by Hwang and Ahuja&nbsp;[<a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node6.html#Hwang">1992</a>].
+We choose to illustrate our discussion with a particular case. A robot
+arm is placed among a set of obstacles. Given an initial and a final position
+of the robot arm, the problem is to find a set of motions that will lead
+the robot to move between the two positions without colliding with the
+obstacles. </p>
+
+<p>To drive the robot amidst the obstacles, early methods&nbsp;[<a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node6.html#brooks">Brooks
+1983</a>] directly used the 3<font size="-2">D</font> <font size="-2">CAD</font>
+models of the robot and of the obstacles to find a solution, i.e., they
+considered the ``operational 3<font size="-2">D</font> space''. In this space,
+the path planning problem consists of finding the movements of a complex
+3<font size="-2">D</font> structure (the robot) in a cluttered 3<font size="-2">D</font>
+space. </p>
+
+<p>A major advance was to express the problem in another space known as
+the configuration space, denoted by <img src="./The Path Planning Problem_files/img1.gif" alt="tex2html_wrap_inline1298" height="14" width="10" align="BOTTOM">
+&nbsp;[<a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node6.html#Lozano87">Lozano-Pérez 1987</a>]. In
+this space, the position (or configuration) of a robot is completely determined
+by a single point having <i>n</i> independent parameters as coordinates.
+The positions that are not physically legal (because of a collision) are
+represented by particular regions of <img src="./The Path Planning Problem_files/img1.gif" alt="tex2html_wrap_inline1298" height="14" width="10" align="BOTTOM">
+, and are called <img src="./The Path Planning Problem_files/img7.gif" alt="tex2html_wrap_inline1322" height="14" width="86" align="BOTTOM">
+. In the configuration space, the path planning problem consists of finding
+a continuous curve (representing a path for a single geometrical point)
+that (i) connects the points representing the initial and the final configuration
+of the robot, and (ii) does not intersect any <img src="./The Path Planning Problem_files/img7.gif" alt="tex2html_wrap_inline1322" height="14" width="86" align="BOTTOM">
+. This method trades a simplification of the path planning problem (it
+searches a path for a single point) against a higher-dimensional search
+space (the dimension of <img src="./The Path Planning Problem_files/img1.gif" alt="tex2html_wrap_inline1298" height="14" width="10" align="BOTTOM">
+is the number <font size="-2">DOF</font> of the robot) and against more complex
+shapes of obstacles (very simple physical obstacles may result in very
+complex <img src="./The Path Planning Problem_files/img7.gif" alt="tex2html_wrap_inline1322" height="14" width="86" align="BOTTOM">
+). </p>
+
+<p>For example, let us consider the planar arm of Figure&nbsp;<a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node2.html#figwork_sp">1</a>.
+Its position among the obstacles is totally known once the values of the
+angles between its links <img src="./The Path Planning Problem_files/img8.gif" alt="tex2html_wrap_inline1330" height="29" width="52" align="CENTER">
+are known. Thus, for each pair <img src="./The Path Planning Problem_files/img8.gif" alt="tex2html_wrap_inline1330" height="29" width="52" align="CENTER">
+, it is possible to decide whether the robot collides with the surrounding
+obstacles. This is what we did in Figure&nbsp;<a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node2.html#figCB_obst">2</a>
+to represent the mapping between the physical obstacles in the operational
+space and the <img src="./The Path Planning Problem_files/img7.gif" alt="tex2html_wrap_inline1322" height="14" width="86" align="BOTTOM">
+. Now, by moving a point along the curve joining <img src="./The Path Planning Problem_files/img9.gif" alt="tex2html_wrap_inline1336" height="25" width="14" align="CENTER">
+and <img src="./The Path Planning Problem_files/img10.gif" alt="tex2html_wrap_inline1338" height="26" width="14" align="CENTER">
+one will also define a collision-free motion for the planar arm between
+the corresponding positions <img src="./The Path Planning Problem_files/img11.gif" alt="tex2html_wrap_inline1340" height="29" width="43" align="CENTER">
+and <img src="./The Path Planning Problem_files/img12.gif" alt="tex2html_wrap_inline1342" height="29" width="43" align="CENTER">
+in the operational space. This curve is one solution to this particular
+path planning problem. </p>
+
+<p>A recent trend in the field is to consider the ``trajectory space''&nbsp;[<a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node6.html#ferbach">Ferbach
+1996</a>] where a whole path is represented by a single point. The coordinates
+of this point are the values of the parameters defining the successive
+movements of the robot. For instance, the list of successive commands sent
+to the robot controller indeed encode an entire path of the robot. In this
+space, the path planning problem is reduced to the search for a single
+point. Once again, we trade a simplification of the path planning problem
+(searching for a point) against a higher dimension of the search space
+(the dimension of the trajectory space is the number of parameters needed
+to specify completely a whole path). For example, in Figure&nbsp;<a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node2.html#figCB_obst">2</a>,
+the path between <img src="./The Path Planning Problem_files/img13.gif" alt="tex2html_wrap_inline1344" height="25" width="12" align="CENTER">
+and <img src="./The Path Planning Problem_files/img14.gif" alt="tex2html_wrap_inline1346" height="25" width="14" align="CENTER">
+can be represented by a point in a seven-dimensional space simply by considering
+the length of its seven segments. </p>
+
+<p><a name="635"></a>&nbsp;<a name="figwork_sp"></a>&nbsp; <img src="./The Path Planning Problem_files/img15.gif" alt="figure178" height="339" width="303" align="BOTTOM">
+<br>
+<b>Figure 1:</b> A two <font size="-2">DOF</font> arm placed among obstacles
+in the operational space <br>
+</p>
+
+<p><a name="702"></a>&nbsp;<a name="figCB_obst"></a>&nbsp; <img src="./The Path Planning Problem_files/img19.gif" alt="figure203" height="332" width="300" align="BOTTOM">
+<br>
+<b>Figure:</b> The configuration space corresponding to Figure&nbsp;<a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node2.html#figwork_sp">1</a>.
+Note: (1) <img src="./The Path Planning Problem_files/img1.gif" alt="tex2html_wrap_inline1298" height="14" width="10" align="BOTTOM">
+is a torus, (2) it is divided into two regions <img src="./The Path Planning Problem_files/img16.gif" alt="tex2html_wrap_inline1288" height="26" width="48" align="CENTER">
+and <img src="./The Path Planning Problem_files/img17.gif" alt="tex2html_wrap_inline1290" height="25" width="47" align="CENTER">
+that cannot be connected by a continuous path, and (3) there is not a <img src="./The Path Planning Problem_files/img1.gif" alt="tex2html_wrap_inline1298" height="14" width="10" align="BOTTOM">
+-obstacle for <img src="./The Path Planning Problem_files/img18.gif" alt="tex2html_wrap_inline1294" height="27" width="18" align="CENTER">
+because it does not interfere with the arm.<br>
+</p>
+
+<h2><a name="SECTION00021000000000000000"></a>Global Approaches</h2>
+
+<p>Global approaches are classically divided into two main classes: (i)
+retraction methods, and (ii) decomposition methods. In the retraction methods,
+one tries to reduce the dimension of the initial problem by recursively
+considering sub-manifolds of the configuration space. In the decomposition
+methods, one tries to characterize the regions of the configuration space
+that are free of obstacles. Both methods end up with a classical graph
+search over a discrete space. In principle, these methods are <i>complete</i>
+because they will find a path if one exists and will still terminate in
+a finite time if a path does not exist. Unfortunately, computing the retraction
+or the decomposition graph is an <font size="-2">NP</font>-complete problem:
+the complexity of this task grows exponentially as the number of <font size="-2">DOF</font>
+increases&nbsp;[<a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node6.html#canny">Canny 1988</a>]. Consequently,
+these planners are used only for robots having a limited number (three
+or four) of <font size="-2">DOF</font>. In addition, they are slow and can
+only be used off-line: the planner is invoked with a model of the environment,
+it produces a plan that is passed to the robot controller which, in turn,
+executes it. In general, the time necessary to achieve this is not short
+enough to allow the robot to move in a dynamic environment. </p>
+
+<h2><a name="SECTION00022000000000000000"></a>Path Planning with Local
+Planners</h2>
+
+<p>One way to combat the complexity of the problem is to trade completeness
+against performance. To do this, the local planners are guided by the gradient
+of a cost function (usually the Euclidean distance to the goal) and take
+into account the constraints introduced by the obstacles to avoid them&nbsp;[<a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node6.html#Fav87">Faverjon
+Tournassoud 1987</a>]. Since the path planning problem is <font size="-2">NP</font>-complete,
+knowing the cost function, it is always possible to design a deceptive
+environment where the method will get trapped in a local minimum. However,
+these methods are useful in many industrial applications because they can
+deal with complex robots and environment models having thousands of faces,
+that are often too time-consuming for global methods. </p>
+
+<h2><a name="SECTION00023000000000000000"></a>Path Planning with Randomized
+Techniques and Landmarks</h2>
+
+<p>The stochastic or random approach was first introduced by Barraquand
+and Latombe&nbsp;[<a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node6.html#Barraquand90">1990</a>], and later
+used by Overmars&nbsp;[<a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node6.html#Overmars92">1992</a>], and more
+recently by Kavraki&nbsp;[<a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node6.html#kavraki">1996</a>]. The main
+idea behind these algorithms is to build a graph in the configuration space.
+The graph is obtained incrementally as follows: a local planner is used
+to try to reach the goal. Should the motion stop at a local minimum, a
+new node (or landmark) is created by generating a random motion starting
+from that local minimum. The method iterates these two steps until the
+goal configuration has been reached from one of these intermediary positions
+by a gradient descent motion. These algorithms work with a discretized
+representation of the configuration space. They are known to be <i>probabilistically
+complete</i> because the probability of terminating with a solution (a
+path has been found or no path exists) converges to one as the allowed
+time increase towards infinity. As in the previous section, it is also
+possible to design simple deceptive environments that will make this kind
+of algorithm slower than a pure random approach. However, they have been
+tested for robots with a high number of <font size="-2">DOF</font> and they
+have been shown to work quickly in relatively complex and natural environments.
+</p>
+
+<p>Other methods using landmarks have been devised. For example, <font size="-2">SANDROS</font>,
+introduced by Chen and Hwang[<a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node6.html#Hwang">Hwang 1992</a>],
+makes use of landmarks to approximate the free space. This approach is
+similar to the ``hierarchical planning'' approach used in <font size="-2">AI</font>:
+should the method fail to reach a goal, new subgoals are generated until
+the problem is easy enough to be solved. In their approach, first a local
+planner is used to reach the final position: should the local planner fail,
+the configuration space is divided into two subspaces, one containing the
+goal and the other a new sub-goal. The problem is therefore divided into
+two sub-problems: (i) going from the initial position to the subgoal, and
+(ii) going from the subgoal to the final position. <font size="-2">SANDROS</font>
+has been shown to be particularly well adapted to find paths for manipulators.
+It has been implemented and tested for planning paths for Puma and Adept
+robots. </p>
+
+<h2><a name="SECTION00024000000000000000"></a>Path Planning in the Trajectory
+Space</h2>
+
+<p>The previous methods were essentially based on the configuration space:
+the retraction, the decomposition, or the optimization is made in this
+space. An alternative is to consider the ``trajectory space''. For example,
+in his method <font size="-2">VDP</font>, Ferbach&nbsp;[<a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node6.html#ferbach">Ferbach
+1996</a>] starts by considering the straight line segment joining the initial
+and the final configuration in <img src="./The Path Planning Problem_files/img1.gif" alt="tex2html_wrap_inline1298" height="14" width="10" align="BOTTOM">
+. This path is progressively modified in such a manner that the forbidden
+regions it crosses are reduced. At each iteration, a sub-manifold of <img src="./The Path Planning Problem_files/img1.gif" alt="tex2html_wrap_inline1298" height="14" width="10" align="BOTTOM">
+containing the current path is randomly generated. It is then discretized
+and explored using a dynamic programming method that uses the length across
+the forbidden region as the cost function in order to minimize. The search
+results in a new trajectory whose intersection with the forbidden regions
+is smaller than the original trajectory. The process is repeated until
+an admissible trajectory is found. As in the previous sections, it is also
+possible to design simple deceptive environments that will make this kind
+of algorithm slower than a pure random approach. </p>
+
+<p>The work of Lin, Xiao, and Michalewicz&nbsp;[<a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node6.html#xiao94">1994</a>]
+is similar to our approach. As in an early version of our algorithm&nbsp;[<a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node6.html#jma92">Ahuactzin,
+Mazer, Bessière, Talbi 1992</a>], genetic algorithms are used to
+carry out optimization in the trajectory space. Trajectories are parameterized
+using the coordinates of intermediary via-points. An evolutionary algorithm
+is used to optimize a cost function based on the length of the trajectory
+and the forbidden region crossed. The standard operators of the genetic
+algorithms have been modified and later extended to produce a large variety
+of paths&nbsp;[<a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node6.html#xiao96">Xiao, Michalewicz, Zhang 1996</a>].
+The number of intermediary via-points is fixed and chosen using an heuristic.
+Given this number, nothing prevents to design a deceptive problem which
+solution will require more intermediary points, leading the algorithm to
+fail while one solution exists. </p>
+
+<p>
+</p><hr><a name="tex2html42"></a><a name="tex2html42"></a><a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node3.html" name="tex2html42"><img src="./The Path Planning Problem_files/next_motif.gif" alt="next" height="24" width="37" align="BOTTOM"></a>
+<a name="tex2html40"></a><a name="tex2html40"></a><a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/ariane.html" name="tex2html40"><img src="./The Path Planning Problem_files/up_motif.gif" alt="up" height="24" width="26" align="BOTTOM"></a>
+<a name="tex2html34"></a><a name="tex2html34"></a><a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node1.html" name="tex2html34"><img src="./The Path Planning Problem_files/previous_motif.gif" alt="previous" height="24" width="63" align="BOTTOM"></a>
+<br>
+<b>Next:</b> <a name="tex2html43"></a><a name="tex2html43"></a><a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node3.html" name="tex2html43">Principle
+of the Ariadne's </a><b>Up:</b> <a name="tex2html41"></a><a name="tex2html41"></a><a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/ariane.html" name="tex2html41">No
+Title</a> <b>Previous:</b> <a name="tex2html35"></a><a name="tex2html35"></a><a href="https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume9/mazer98a-html/node1.html" name="tex2html35">Introduction</a>
+<p></p>
+
+<address><i>Emmanuel Mazer <br>
+Tue Nov 10 17:28:31 MET 1998</i> </address>
+
+
+
+</body></html>
